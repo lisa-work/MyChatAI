@@ -9,7 +9,7 @@ export async function POST(req: Request) {
 
     const geminiReply = await generateGeminiReply([
       {
-        role: "system",
+        role: "user",
         content:
           "Depends on user input sources, summarize and search about topic or answer the user's questions. Give me a markdown text with proper formatting. User input is: " +
           messages[messages.length - 1].content,

@@ -22,7 +22,7 @@ export const llmModel = inngest.createFunction(
       body: {
         contents: [
           {
-            role: "system",
+            role: "user",
             parts: [
               {
                 text:

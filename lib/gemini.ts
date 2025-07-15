@@ -3,7 +3,7 @@ export async function generateGeminiReply(messages: { role: string; content: str
   if (!apiKey) throw new Error('NEXT_PUBLIC_GEMINI_API_KEY is not set');
 
   const contents = messages.map((m) => ({
-    role: m.role,
+    role: m.role === 'system' ? 'user' : m.role,
     parts: [{ text: m.content }],
   }));
 

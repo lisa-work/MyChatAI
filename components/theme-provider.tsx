@@ -1,6 +1,8 @@
 'use client';
 
+import { supabase } from '@/data/supabase';
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './auth-provider';
 
 type Theme = 'light' | 'dark' | 'pink' | 'yellow' | 'blue' | 'green';
 
@@ -21,24 +23,38 @@ const initialState: ThemeProviderState = {
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>('light');
+  const { user, setUser } = useAuth();
+  const [theme, setThemeState] = useState<Theme>('light');
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme;
+    const savedTheme = (user?.theme || localStorage.getItem('theme')) as Theme;
     if (savedTheme) {
-      setTheme(savedTheme);
+      setThemeState(savedTheme);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     localStorage.setItem('theme', theme);
     document.documentElement.className = theme;
-  }, [theme]);
+    if (user && user.theme !== theme) {
+      supabase
+        .from('Users')
+        .update({ theme })
+        .eq('id', user.id)
+        .then(({ error }) => {
+          if (error) {
+            console.error('Failed to save theme', error);
+          } else {
+            setUser(prev => (prev ? { ...prev, theme } : prev));
+          }
+        });
+    }
+  }, [theme, user, setUser]);
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      setTheme(theme);
+    setTheme: (t: Theme) => {
+      setThemeState(t);
     },
   };
 

@@ -9,7 +9,8 @@ type User = {
   email: string;
   name: string;
   avatar?: string;
-  password: string; // Note: Storing passwords in plain text is not secure. Use hashing in production.
+  password: string;
+  theme?: string; // Optional theme preference
 };
 
 type AuthProviderProps = {
@@ -69,6 +70,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     name: data.name,
     avatar: data.avatar,
     password: data.password,
+    theme: data.theme
   };
 
   setUser(formattedUser);
@@ -90,6 +92,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         password: hashedPassword, // Save hashed password
         name,
         avatar: avatarUrl,
+        theme: 'light',
       },
     ])
     .select()
@@ -105,6 +108,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     name: data.name,
     avatar: data.avatar,
     password: data.password,
+    theme: data.theme
   };
 
   setUser(formattedUser);

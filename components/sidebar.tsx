@@ -21,7 +21,6 @@ const menuItems = [
   { name: 'Home', icon: Home, href: '/' },
   { name: 'New Chat', icon: MessageCircle, href: '/chat' },
   { name: 'Library', icon: Library, href: '/library' },
-  { name: 'Discover', icon: Search, href: '/search' },
   { name: 'Settings', icon: Settings, href: '/settings' },
 ];
 

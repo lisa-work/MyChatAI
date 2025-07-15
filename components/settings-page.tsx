@@ -78,7 +78,7 @@ const handleSave = async () => {
 
     const { error } = await supabase
       .from('Users')
-      .update({ name, email, avatar: avatarUrl, password: updatedPassword })
+      .update({ name, email, avatar: avatarUrl, password: updatedPassword, theme })
       .eq('id', user?.id);
 
     if (error) throw error;
@@ -104,6 +104,7 @@ const handleSave = async () => {
       email: updatedUserData.email,
       avatar: updatedUserData.avatar,
       password: updatedUserData.password,
+      theme: updatedUserData.theme,
     });
 
     localStorage.setItem(
@@ -114,6 +115,7 @@ const handleSave = async () => {
         email: updatedUserData.email,
         avatar: updatedUserData.avatar,
         password: updatedUserData.password,
+        theme: updatedUserData.theme,
       })
     );
 

@@ -41,7 +41,15 @@ export function ThemeSelector() {
       if (error) throw error;
 
       // Update context and local storage
-      const updatedUser = { ...user, theme: selectedTheme };
+      const updatedUser = {
+        ...user,
+        id: user!.id,
+        theme: selectedTheme,
+        email: user!.email,
+        name: user!.name,
+        avatar: user!.avatar,
+        password: user!.password
+      };
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
 

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { inngest } from "@/inngest/client";
-import { openai } from "@/lib/openai";
 import { generateGeminiReply } from "@/lib/gemini";
+// import gemini (remove or correct if needed)
+// import gemini from "@/lib/gemini"; // Uncomment and correct if you need to import gemini
 
 export async function POST(req: Request) {
   try {
@@ -20,13 +21,6 @@ export async function POST(req: Request) {
       },
     ]);
 
-    const ai = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages,
-    });
-
-    const reply = ai.choices?.[0]?.message?.content || "";
-
     await inngest.send({
       name: "text/llm.model",
       data: {
@@ -36,7 +30,7 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json({ reply });
+    return NextResponse.json({ reply: geminiReply });
   } catch (error) {
     console.error("Failed to process chat", error);
     return NextResponse.json(

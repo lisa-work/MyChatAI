@@ -53,23 +53,24 @@ export function ChatInterface() {
         content: m.content,
       }));
 
-      const res = await fetch('/api/api-chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: formattedMessages, recordId: null }),
-      });
+const res = await fetch('/api/api-chat', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ messages: formattedMessages, recordId: null }),
+});
 
-      let data: any = null;
-      try {
-        data = await res.json();
-      } catch {
-        // ignore parse error
-      }
+let data: any = null;
+try {
+  data = await res.json();
+} catch {
+  // ignore parse error
+}
 
-      if (!res.ok) {
-        const err = data?.error || data?.reply || 'Error getting response from server.';
-        throw new Error(err);
-      }
+if (!res.ok) {
+  const err = data?.error || data?.reply || 'Error getting response from server.';
+  throw new Error(err);
+}
+
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),

@@ -1,10 +1,24 @@
 import { NextResponse } from "next/server";
 import { inngest } from "@/inngest/client";
 import { openai } from "@/lib/openai";
+import { generateGeminiReply } from "@/lib/gemini";
 
 export async function POST(req: Request) {
   try {
     const { messages, recordId } = await req.json();
+
+    const geminiReply = await generateGeminiReply([
+      {
+        role: "system",
+        content:
+          "Depends on user input sources, summarize and search about topic or answer the user's questions. Give me a markdown text with proper formatting. User input is: " +
+          messages[messages.length - 1].content,
+      },
+      {
+        role: "user",
+        content: JSON.stringify(messages.slice(0, -1)),
+      },
+    ]);
 
     const ai = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",

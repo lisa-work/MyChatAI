@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -34,6 +34,28 @@ export function SettingsPage() {
   const [uploading, setUploading] = useState(false);
   const [password, setPassword] = useState(user?.password || '');
   const [showPassword, setShowPassword] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
+
+  useEffect(() => {
+    const changed =
+      name !== (user?.name || '') ||
+      email !== (user?.email || '') ||
+      avatarUrl !== (user?.avatar || '') ||
+      password !== (user?.password || '') ||
+      theme !== (user?.theme || 'light');
+    setHasChanges(changed);
+  }, [name, email, avatarUrl, password, theme, user]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasChanges]);
 
 
   const handleAvatarUpload = async (file: File) => {
@@ -60,6 +82,7 @@ export function SettingsPage() {
       }
 
       setAvatarUrl(publicUrlData.publicUrl);
+      
       toast.success('Avatar uploaded successfully!');
     } catch (error: any) {
       toast.error(`Avatar upload failed: ${error.message}`);
@@ -118,7 +141,7 @@ const handleSave = async () => {
         theme: updatedUserData.theme,
       })
     );
-
+    setHasChanges(false);
     toast.success('Settings saved successfully!');
   } catch (error: any) {
     toast.error(`Failed to save: ${error.message}`);
@@ -149,6 +172,10 @@ const handleSave = async () => {
           Save Changes
         </Button>
       </div>
+
+      {hasChanges && (
+        <p className="text-sm text-red-600">You have unsaved changes.</p>
+      )}
 
       {/* Profile Settings */}
       <Card>

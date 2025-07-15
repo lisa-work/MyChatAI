@@ -60,6 +60,12 @@ export function ChatInterface() {
       });
 
       const data = await res.json();
+
+      if (!res.ok) {
+        const err = data.error || data.reply || 'Error getting response from server.';
+        throw new Error(err);
+      }
+
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: data.reply ?? '',
@@ -69,9 +75,10 @@ export function ChatInterface() {
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
       console.error('Failed to get AI response', error);
+      const msg = error instanceof Error ? error.message : 'Error getting response from server.';
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: 'Error getting response from server.',
+        content: msg,
         sender: 'ai',
         timestamp: new Date(),
       };

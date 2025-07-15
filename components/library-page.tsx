@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -40,9 +40,9 @@ export default function ChatPage() {
   };
 
   // 🔄 Load chats initially
-  useState(() => {
+  useEffect(() => {
     fetchChats();
-  });
+  }, []);
 
   const handleCreateChat = async () => {
     const newChat: Chat = {

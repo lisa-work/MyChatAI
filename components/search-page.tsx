@@ -151,7 +151,7 @@ export function SearchPage() {
       {searchQuery && results.length === 0 && !isSearching && (
         <div className="text-center py-12">
           <p className="text-muted-foreground">
-            No results found for "{searchQuery}". Try different keywords or check your spelling.
+          No results found for &quot;{searchQuery}&quot;. Try different keywords or check your spelling.
           </p>
         </div>
       )}

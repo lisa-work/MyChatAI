@@ -47,24 +47,38 @@ export function ChatInterface() {
     setInput('');
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const formattedMessages = [...messages, userMessage].map(m => ({
+        role: m.sender === 'user' ? 'user' : 'assistant',
+        content: m.content,
+      }));
+
+      const res = await fetch('/api/api-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: formattedMessages }),
+      });
+
+      const data = await res.json();
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: `I understand you're asking about "${input}". This is a simulated AI response that demonstrates how the chat interface works. In a real implementation, this would be connected to an actual AI service.`,
+        content: data.reply ?? '',
         sender: 'ai',
         timestamp: new Date(),
-        images: Math.random() > 0.7 ? [
-          'https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop'
-        ] : undefined,
-        sources: Math.random() > 0.5 ? [
-          { title: 'Example Source 1', url: 'https://example.com/1' },
-          { title: 'Example Source 2', url: 'https://example.com/2' },
-        ] : undefined,
       };
       setMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      console.error('Failed to get AI response', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: 'Error getting response from server.',
+        sender: 'ai',
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 2000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

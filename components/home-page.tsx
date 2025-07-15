@@ -66,7 +66,7 @@ export function HomePage() {
           {exampleQuestions.map((question, index) => (
             <Card key={index} className="cursor-pointer hover:shadow-md transition-shadow">
               <CardContent className="p-4">
-                <p className="text-sm text-muted-foreground">"{question}"</p>
+                <p className="text-sm text-muted-foreground">&quot;{question}&quot;</p>
               </CardContent>
             </Card>
           ))}

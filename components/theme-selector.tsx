@@ -1,13 +1,16 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { useTheme } from '@/components/theme-provider';
+import { useAuth } from '@/hooks/use-auth';
+import { supabase } from '@/data/supabase';
+import { toast } from 'sonner';
 import { Palette } from 'lucide-react';
 
 const themes = [
@@ -21,6 +24,29 @@ const themes = [
 
 export function ThemeSelector() {
   const { theme, setTheme } = useTheme();
+  const { user, setUser } = useAuth();
+
+  const handleThemeChange = async (selectedTheme: string) => {
+    setTheme(selectedTheme);
+
+    try {
+      const { error } = await supabase
+        .from('Users')
+        .update({ theme: selectedTheme })
+        .eq('id', user?.id);
+
+      if (error) throw error;
+
+      // Update context and local storage
+      const updatedUser = { ...user, theme: selectedTheme };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+
+      toast.success(`Theme updated to ${selectedTheme}`);
+    } catch (error: any) {
+      toast.error(`Failed to update theme: ${error.message}`);
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -31,9 +57,9 @@ export function ThemeSelector() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {themes.map((themeOption) => (
-          <DropdownMenuItem 
+          <DropdownMenuItem
             key={themeOption.value}
-            onClick={() => setTheme(themeOption.value)}
+            onClick={() => handleThemeChange(themeOption.value)}
             className="flex items-center gap-2"
           >
             <div className={`w-4 h-4 rounded-full ${themeOption.color} border`} />

@@ -2,6 +2,7 @@
 
 import { supabase } from '@/data/supabase';
 import { createContext, useContext, useState, useEffect } from 'react';
+import bcrypt from 'bcryptjs';
 
 type User = {
   id: string;

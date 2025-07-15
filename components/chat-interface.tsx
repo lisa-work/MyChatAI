@@ -59,10 +59,15 @@ export function ChatInterface() {
         body: JSON.stringify({ messages: formattedMessages, recordId: null }),
       });
 
-      const data = await res.json();
+      let data: any = null;
+      try {
+        data = await res.json();
+      } catch {
+        // ignore parse error
+      }
 
       if (!res.ok) {
-        const err = data.error || data.reply || 'Error getting response from server.';
+        const err = data?.error || data?.reply || 'Error getting response from server.';
         throw new Error(err);
       }
 

@@ -1,20 +1,7 @@
-// import { openai } from "@/lib/openai";
-
-// export async function POST(req: Request) {
-//   const { messages } = await req.json();
-
-//   const response = await openai.chat.completions.create({
-//     model: "gpt-4o",
-//     messages,
-//   });
-
-//   return Response.json({ reply: response.choices[0].message.content });
-// }
-
-import { openai } from "@/lib/openai";
+import { inngest, chatAI } from "@/lib/inngest";
 
 function missingKey() {
-  return !process.env.NEXT_OPENAI_API_KEY;
+  return !process.env.INNGEST_EVENT_KEY || !process.env.INNGEST_SIGNING_KEY;
 }
 
 export async function POST(req: Request) {
@@ -22,20 +9,16 @@ export async function POST(req: Request) {
 
   if (missingKey()) {
     return Response.json(
-      { error: "OpenAI API key not configured." },
+      { error: "Inngest keys not configured." },
       { status: 500 }
     );
   }
 
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages,
-    });
-
-    return Response.json({ reply: response.choices[0].message.content });
+    const result = await inngest.invoke(chatAI, { data: { messages } });
+    return Response.json({ reply: result.data.reply });
   } catch (error: unknown) {
-    console.error("OpenAI request failed", error);
+    console.error("Inngest request failed", error);
     const message =
       error && typeof error === "object" && "message" in error
         ? String((error as any).message)

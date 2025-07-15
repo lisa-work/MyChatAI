@@ -2,7 +2,7 @@
 
 import { Header } from '@/components/header';
 import { Sidebar } from '@/components/sidebar';
-import { LibraryPage } from '@/components/library-page';
+import LibraryPage from '@/components/library-page';
 import { useAuth } from '@/hooks/use-auth';
 import { AuthPage } from '@/components/auth-page';
 

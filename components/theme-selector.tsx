@@ -13,6 +13,9 @@ import { supabase } from '@/data/supabase';
 import { toast } from 'sonner';
 import { Palette } from 'lucide-react';
 
+// Define Theme type explicitly
+type Theme = 'light' | 'dark' | 'pink' | 'yellow' | 'blue' | 'green';
+
 const themes = [
   { name: 'Light', value: 'light' as const, color: 'bg-white' },
   { name: 'Dark', value: 'dark' as const, color: 'bg-gray-900' },
@@ -26,7 +29,7 @@ export function ThemeSelector() {
   const { theme, setTheme } = useTheme();
   const { user, setUser } = useAuth();
 
-  const handleThemeChange = async (selectedTheme: string) => {
+  const handleThemeChange = async (selectedTheme: Theme) => {
     setTheme(selectedTheme);
 
     try {

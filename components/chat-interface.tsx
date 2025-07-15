@@ -56,7 +56,7 @@ export function ChatInterface() {
       const res = await fetch('/api/api-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: formattedMessages }),
+        body: JSON.stringify({ messages: formattedMessages, recordId: null }),
       });
 
       const data = await res.json();

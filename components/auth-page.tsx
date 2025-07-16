@@ -86,7 +86,7 @@ export function AuthPage() {
               <TabsContent value="login" className="mt-4">
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="login-email">Email</Label>
+                    <Label htmlFor="login-email">Email <span className="text-red-500">*</span></Label>
                     <Input
                       id="login-email"
                       type="email"
@@ -97,7 +97,7 @@ export function AuthPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="login-password">Password</Label>
+                    <Label htmlFor="login-password">Password <span className="text-red-500">*</span></Label>
                     <div className="relative">
                     <Input
                       id="login-password"
@@ -127,7 +127,7 @@ export function AuthPage() {
               <TabsContent value="signup" className="mt-4">
                 <form onSubmit={handleSignup} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signup-name">Name</Label>
+                    <Label htmlFor="signup-name">Name <span className="text-red-500">*</span></Label>
                     <Input
                       id="signup-name"
                       placeholder="Enter your name"
@@ -137,7 +137,7 @@ export function AuthPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
+                    <Label htmlFor="signup-email">Email <span className="text-red-500">*</span></Label>
                     <Input
                       id="signup-email"
                       type="email"
@@ -148,7 +148,7 @@ export function AuthPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
+                    <Label htmlFor="signup-password">Password <span className="text-red-500">*</span></Label>
                     <div className="relative">
                       <Input
                         id="signup-password"

@@ -74,7 +74,7 @@ export function SearchPage() {
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <div className="space-y-4">
-        <h1 className="text-2xl font-bold">Search Chats</h1>
+        <h1 className="text-2xl font-bold rounded-lg">Search Chats</h1>
         
         <div className="flex gap-2">
           <div className="relative flex-1">

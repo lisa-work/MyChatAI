@@ -65,7 +65,7 @@ export function Sidebar() {
             placeholder="Search chats..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="h-8"
+            className="h-8 rounded-lg"
           />
         </div>
         

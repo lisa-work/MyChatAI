@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MessageCircle, Sparkles, Shield, Zap } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const exampleQuestions = [
   "What are the latest trends in AI technology?",
@@ -38,6 +39,8 @@ const features = [
 ];
 
 export function HomePage() {
+  const router = useRouter();
+
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       {/* Hero Section */}
@@ -64,7 +67,11 @@ export function HomePage() {
         <h2 className="text-2xl font-semibold text-center">Try asking me...</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {exampleQuestions.map((question, index) => (
-            <Card key={index} className="cursor-pointer hover:shadow-md transition-shadow">
+            <Card
+              key={index}
+              className="cursor-pointer hover:shadow-md transition-shadow"
+              onClick={() => router.push(`/chat?question=${encodeURIComponent(question)}`)}
+            >
               <CardContent className="p-4">
                 <p className="text-sm text-muted-foreground">&quot;{question}&quot;</p>
               </CardContent>
@@ -72,29 +79,7 @@ export function HomePage() {
           ))}
         </div>
       </section>
-
-      {/* Features */}
-      <section className="space-y-6">
-        <h2 className="text-2xl font-semibold text-center">Why Choose ChatAI?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {features.map((feature, index) => (
-            <Card key={index}>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <feature.icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <CardTitle className="text-lg">{feature.title}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>{feature.description}</CardDescription>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
+      
       {/* CTA Section */}
       <section className="text-center space-y-4 py-8">
         <h2 className="text-2xl font-semibold">Ready to Get Started?</h2>
@@ -103,7 +88,7 @@ export function HomePage() {
         </p>
         <Button size="lg" asChild>
           <Link href="/chat">
-            Start Your First Chat
+            Start Your Chat
           </Link>
         </Button>
       </section>

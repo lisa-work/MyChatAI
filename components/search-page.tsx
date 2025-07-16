@@ -56,9 +56,9 @@ export function SearchPage() {
     // Simulate search delay
     setTimeout(() => {
       const filteredResults = mockResults.filter(result =>
-        result.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        result.snippet.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        result.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        (result.title ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (result.snippet ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (result.tags ?? []).some(tag => (tag ?? '').toLowerCase().includes(searchQuery.toLowerCase()))
       );
       setResults(filteredResults);
       setIsSearching(false);

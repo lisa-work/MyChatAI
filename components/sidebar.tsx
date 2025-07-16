@@ -60,14 +60,14 @@ export function Sidebar() {
       </nav>
 
       <div className="p-3 border-t">
-        <div className="mb-2">
+        {/* <div className="mb-2">
           <Input
             placeholder="Search chats..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="h-8 rounded-lg"
           />
-        </div>
+        </div> */}
         
         <Button 
           variant="ghost" 

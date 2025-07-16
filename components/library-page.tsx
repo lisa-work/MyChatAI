@@ -90,11 +90,18 @@ export default function ChatPage() {
     fetchChats();
   };
 
-  const filteredChats = chats.filter(chat =>
-    chat.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    chat.last_message.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    chat.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  // const filteredChats = chats.filter(chat =>
+  //   chat.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //   chat.last_message.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //   chat.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  // );
+
+  const filteredChats = chats.filter(result =>
+  (result.title ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+  (result.last_message ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+  (result.tags ?? []).some(tag => (tag ?? '').toLowerCase().includes(searchQuery.toLowerCase()))
+);
+
 
   const pinnedChats = filteredChats.filter(chat => chat.is_pinned);
   const regularChats = filteredChats.filter(chat => !chat.is_pinned);
@@ -114,7 +121,7 @@ export default function ChatPage() {
               {chat.title}
               {chat.is_pinned && <Pin className="h-4 w-4 text-muted-foreground" />}
             </CardTitle>
-            <CardDescription className="mt-1">
+            <CardDescription className="mt-1 text-sm text-muted-foreground line-clamp-2">
               {chat.last_message}
             </CardDescription>
           </div>
@@ -156,7 +163,7 @@ export default function ChatPage() {
       <CardContent>
         <div className="flex items-center justify-between">
           <div className="flex gap-1 flex-wrap">
-            {chat.tags.map((tag) => (
+            {(chat.tags ?? []).map((tag) => (
               <Badge key={tag} variant="secondary" className="text-xs">
                 {tag}
               </Badge>

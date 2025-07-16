@@ -16,7 +16,7 @@ export const llmModel = inngest.createFunction(
   async ({ event, step }) => {
     const aiResp = await step.ai.infer("generate-ai-llm-model-call", {
       model: step.ai.models.gemini({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.0-flash",
         apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY,
       }),
       body: {
@@ -26,7 +26,7 @@ export const llmModel = inngest.createFunction(
             parts: [
               {
                 text:
-                  "Depends on user input sources, search about topic and give detailed answers or answer the user's questions. Please return your answer in Markdown, using double line breaks (\n\n) between paragraphs so that it renders with correct paragraph tags, style the main points to be bold and style the header to be bold and bigger than the body. User input is: " +
+                  "Depends on user input sources, search about topic and give detailed answers or answer the user's questions. Please return your answer in Markdown, using double line breaks between paragraphs so that it renders with correct paragraph tags, style the main points to be bold and style the header to be bold and bigger than the body. Please do not show any HTML tags in the output. User input is: " +
                   event.data.searchInput,
               },
             ],

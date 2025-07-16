@@ -83,11 +83,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const { data: existingUser, error: existingError } = await supabase
     .from('Users')
     .select('*')
-    .eq('name', name)
+    .eq('email', email)
     .single();
 
   if (existingUser) {
-    throw new Error('Username already exists. Please choose another one.');
+    throw new Error('Email already exists. Please choose another one.');
   }
 
   if (existingError && existingError.code !== 'PGRST116') {

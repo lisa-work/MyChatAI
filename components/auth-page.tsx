@@ -14,7 +14,6 @@ import bcrypt from 'bcryptjs';
 export function AuthPage() {
   const { login, signup } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [signupData, setSignupData] = useState({ name: '', email: '', password: '' });
 
@@ -49,7 +48,7 @@ export function AuthPage() {
       await signup(signupData.email, signupData.password, signupData.name);
       toast.success('Account created successfully!');
     } catch (error) {
-      toast.error('Username already exists');
+      toast.error('Email already exists');
     } finally {
       setIsLoading(false);
     }

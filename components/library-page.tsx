@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Pin, Trash2, Copy, MoreVertical } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/data/supabase';
+import { useAuth } from './auth-provider';
 
 type Chat = {
   id?: number;
@@ -17,44 +18,55 @@ type Chat = {
   last_updated: string;
   is_pinned: boolean;
   tags: string[];
+  user_id: string;
 };
 
 export default function ChatPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [chats, setChats] = useState<Chat[]>([]);
   const router = useRouter();
+  const { user } = useAuth();
 
-  const fetchChats = async () => {
-    const { data, error } = await supabase
-      .from('Chats')
-      .select('*')
-      .order('last_updated', { ascending: false });
+const fetchChats = async () => {
+  if (!user?.id) return;
 
-    if (!error && data) {
-      setChats(data as Chat[]);
-    }
-  };
+  const { data, error } = await supabase
+    .from('Chats')
+    .select('*')
+    .eq('user_id', user.id) // ✅ only fetch chats for logged-in user
+    .order('last_updated', { ascending: false });
+
+  if (!error && data) {
+    setChats(data as Chat[]);
+  }
+};
+
 
   useEffect(() => {
     fetchChats();
   }, []);
 
   const handleCreateChat = async () => {
+    if (!user?.id) return;
+
     const newChat: Omit<Chat, 'id'> = {
       title: 'New Chat',
       last_message: 'Start chatting...',
       last_updated: new Date().toISOString(),
       is_pinned: false,
       tags: ['General'],
+      user_id: user.id, // ✅ assign chat to current user
     };
 
     const { data, error } = await supabase.from('Chats').insert([newChat]).select().single();
+
     if (error) {
       console.error('Error inserting new chat:', error);
     } else if (data) {
       router.push(`/chat?id=${data.id}`);
     }
   };
+
 
   const togglePin = async (chatId: number | undefined) => {
     if (!chatId) return;

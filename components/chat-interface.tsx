@@ -106,10 +106,8 @@ const createChatSession = async (newMessages: Message[]) => {
   return data;
 };
 
-
-
   const updateChatSession = async (updatedMessages: Message[]) => {
-    if (!chatId) return;
+    if (!chatId || !user?.id) return;
     const { error } = await supabase
       .from('Chats')
       .update({
@@ -117,7 +115,8 @@ const createChatSession = async (newMessages: Message[]) => {
         last_message: getLastAIMessage(updatedMessages), // 🆕
         last_updated: new Date().toISOString(),
       })
-      .eq('id', chatId);
+      .eq('id', chatId)
+      .eq('user_id', user.id);
 
     if (error) console.error('Error updating chat:', error);
   };
@@ -139,8 +138,8 @@ const createChatSession = async (newMessages: Message[]) => {
   };
 
   const deleteChat = async () => {
-    if (!chatId) return;
-    const { error } = await supabase.from('Chats').delete().eq('id', chatId);
+    if (!chatId || !user?.id) return;
+    const { error } = await supabase.from('Chats').delete().eq('id', chatId).eq('user_id', user.id);
     if (!error) {
       setMessages([]);
       setChatId(null);

@@ -11,6 +11,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { supabase } from '@/data/supabase';
 import { useAuth } from './auth-provider';
 
+type Message = {
+  id?: number;
+  content: string;
+  // Add other message properties if needed
+};
+
 type Chat = {
   id?: number;
   title: string;
@@ -19,6 +25,7 @@ type Chat = {
   is_pinned: boolean;
   tags: string[];
   user_id: string;
+  messages?: Message[];
 };
 
 export default function ChatPage() {
@@ -27,20 +34,26 @@ export default function ChatPage() {
   const router = useRouter();
   const { user } = useAuth();
 
-const fetchChats = async () => {
-  if (!user?.id) return;
-
-  const { data, error } = await supabase
-    .from('Chats')
-    .select('*')
-    .eq('user_id', user.id) // ✅ only fetch chats for logged-in user
-    .order('last_updated', { ascending: false });
-
-  if (!error && data) {
-    setChats(data as Chat[]);
+  function highlightMatch(text: string, query: string) {
+    if (!query) return text;
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape regex
+    const regex = new RegExp(`(${escaped})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
   }
-};
 
+  const fetchChats = async () => {
+    if (!user?.id) return;
+
+    const { data, error } = await supabase
+      .from('Chats')
+      .select('*, messages')
+      .eq('user_id', user.id) // ✅ only fetch chats for logged-in user
+      .order('last_updated', { ascending: false });
+
+    if (!error && data) {
+      setChats(data as Chat[]);
+    }
+  };
 
   useEffect(() => {
     fetchChats();
@@ -102,17 +115,25 @@ const fetchChats = async () => {
     fetchChats();
   };
 
-  // const filteredChats = chats.filter(chat =>
-  //   chat.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //   chat.last_message.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //   chat.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  // );
+//   const filteredChats = chats.filter(result =>
+//   (result.title ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+//   (result.last_message ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+//   (result.tags ?? []).some(tag => (tag ?? '').toLowerCase().includes(searchQuery.toLowerCase()))
+// );
 
-  const filteredChats = chats.filter(result =>
-  (result.title ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-  (result.last_message ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-  (result.tags ?? []).some(tag => (tag ?? '').toLowerCase().includes(searchQuery.toLowerCase()))
-);
+const filteredChats = chats.filter(chat => {
+  const query = searchQuery.toLowerCase();
+
+  const titleMatch = (chat.title ?? '').toLowerCase().includes(query);
+  const lastMessageMatch = (chat.last_message ?? '').toLowerCase().includes(query);
+  const tagMatch = (chat.tags ?? []).some(tag => (tag ?? '').toLowerCase().includes(query));
+
+  const messagesMatch = (chat.messages ?? []).some(
+    msg => (msg.content ?? '').toLowerCase().includes(query)
+  );
+
+  return titleMatch || lastMessageMatch || tagMatch || messagesMatch;
+});
 
 
   const pinnedChats = filteredChats.filter(chat => chat.is_pinned);
@@ -130,11 +151,20 @@ const fetchChats = async () => {
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <CardTitle className="text-lg flex items-center gap-2">
-              {chat.title}
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: highlightMatch(chat.title, searchQuery),
+                }}
+              />
               {chat.is_pinned && <Pin className="h-4 w-4 text-muted-foreground" />}
             </CardTitle>
+
             <CardDescription className="mt-1 text-sm text-muted-foreground line-clamp-2">
-              {chat.last_message}
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: highlightMatch(chat.last_message, searchQuery),
+                }}
+              />
             </CardDescription>
           </div>
 

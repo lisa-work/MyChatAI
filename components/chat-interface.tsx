@@ -21,12 +21,15 @@ type Message = {
 };
 
 export function ChatInterface() {
+  const searchParams = useSearchParams();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [chatId, setChatId] = useState<string | null>(null);
+  const [chatId, setChatId] = useState<string | null>(() => {
+  const initialId = searchParams.get("id");
+  return initialId;
+});
   const [isPinned, setIsPinned] = useState(false);
-  const searchParams = useSearchParams();
   const initialQuestion = searchParams.get("question");
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -46,6 +49,29 @@ useEffect(() => {
   }
   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [initialQuestion]);
+
+useEffect(() => {
+  if (!chatId || messages.length > 0 || !user?.id) return;
+
+  const loadChat = async () => {
+    const { data, error } = await supabase
+      .from('Chats')
+      .select('*')
+      .eq('id', chatId)
+      .eq('user_id', user.id)
+      .single();
+
+    if (error) {
+      console.error('Error loading chat by id:', error);
+      return;
+    }
+
+    setMessages(data.messages || []);
+    setIsPinned(data.is_pinned || false);
+  };
+
+  loadChat();
+}, [chatId, messages.length, user?.id]);
 
 const getLastAIMessage = (messages: Message[]) => {
   const aiMessages = messages.filter((m) => m.sender === 'ai');

@@ -3,6 +3,8 @@
 Welcome to **MyChatAI**, an intelligent and modern chat application that lets you interact naturally with AI, manage your conversations, and personalize your experience through themes and profile customization.
 ### Live Demo: https://my-chat-ai-canada.vercel.app/
 
+### Video Demo: https://youtu.be/gIi6DIU12-Q
+
 ---
 
 ## ✨ **Features**
@@ -89,3 +91,5 @@ Manage your chats from the Library (pin, duplicate, or delete).
 Switch themes anytime using the theme selector.
 
 Log out when you're done.
+
+

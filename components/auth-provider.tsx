@@ -78,7 +78,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
 };
 
 
-  const signup = async (email: string, password: string, name: string) => {
+ const signup = async (email: string, password: string, name: string) => {
+  // ✅ Check if name already exists
+  const { data: existingUser, error: existingError } = await supabase
+    .from('Users')
+    .select('*')
+    .eq('name', name)
+    .single();
+
+  if (existingUser) {
+    throw new Error('Username already exists. Please choose another one.');
+  }
+
+  if (existingError && existingError.code !== 'PGRST116') {
+    // Ignore "no rows found" error code; otherwise, throw
+    throw new Error(existingError.message);
+  }
+
   // ✅ Hash the password before saving
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -89,7 +105,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     .insert([
       {
         email,
-        password: hashedPassword, // Save hashed password
+        password: hashedPassword,
         name,
         avatar: avatarUrl,
         theme: 'light',

@@ -176,12 +176,6 @@ export function AuthPage() {
                 </form>
               </TabsContent>
             </Tabs>
-
-            <div className="mt-4 text-center text-sm text-muted-foreground">
-              <p>
-                Use any email and password to try the demo
-              </p>
-            </div>
           </CardContent>
         </Card>
       </div>

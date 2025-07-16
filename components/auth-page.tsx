@@ -49,7 +49,7 @@ export function AuthPage() {
       await signup(signupData.email, signupData.password, signupData.name);
       toast.success('Account created successfully!');
     } catch (error) {
-      toast.error('Failed to create account');
+      toast.error('Username already exists');
     } finally {
       setIsLoading(false);
     }

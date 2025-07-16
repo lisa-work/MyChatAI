@@ -22,11 +22,11 @@ export const llmModel = inngest.createFunction(
       body: {
         contents: [
           {
-            role: "user",
+            role: "system",
             parts: [
               {
                 text:
-                  "Depends on user input sources, summarize and search about topic or answer the user's questions. Give me a markdown text with proper formatting. User input is: " +
+                  "Depends on user input sources, search about topic and give detailed answers or answer the user's questions. Please return your answer in Markdown, using double line breaks (\n\n) between paragraphs so that it renders with correct paragraph tags, style the main points to be bold and style the header to be bold and bigger than the body. User input is: " +
                   event.data.searchInput,
               },
             ],

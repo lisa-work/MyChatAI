@@ -3,10 +3,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, Paperclip, MoreVertical } from 'lucide-react';
+import { Send, Paperclip } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
 import { TypingIndicator } from '@/components/typing-indicator';
 
@@ -15,8 +14,6 @@ type Message = {
   content: string;
   sender: 'user' | 'ai';
   timestamp: Date;
-  images?: string[];
-  sources?: { title: string; url: string }[];
 };
 
 export function ChatInterface() {
@@ -53,24 +50,16 @@ export function ChatInterface() {
         content: m.content,
       }));
 
-const res = await fetch('/api/api-chat', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ messages: formattedMessages, recordId: null }),
-});
+      const res = await fetch('/api/api-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: formattedMessages, recordId: null }),
+      });
 
-let data: any = null;
-try {
-  data = await res.json();
-} catch {
-  // ignore parse error
-}
-
-if (!res.ok) {
-  const err = data?.error || data?.reply || 'Error getting response from server.';
-  throw new Error(err);
-}
-
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error || 'Error getting response from server.');
+      }
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -101,148 +90,113 @@ if (!res.ok) {
     }
   };
 
-  return (
-    <div className="flex flex-col h-full">
-      {/* Chat Header */}
-      <div className="border-b p-4 flex items-center justify-between">
-        <h1 className="text-lg font-semibold">New Chat</h1>
-        <Button variant="ghost" size="sm">
-          <MoreVertical className="h-4 w-4" />
-        </Button>
-      </div>
+  const formatMarkdown = (text: string) => {
+    return text.replace(/([^\n])\n([^\n])/g, '$1\n\n$2');
+  };
 
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+  return (
+    <div className="flex flex-col h-full bg-background">
+      <div className="flex-1 overflow-y-auto px-4 pt-6 pb-36 w-full">
         {messages.length === 0 && (
           <div className="text-center text-muted-foreground py-12">
             <p>Start a conversation with AI</p>
           </div>
         )}
-        
+
         {messages.map((message) => (
           <div
             key={message.id}
             className={cn(
-              'flex w-full',
+              'flex gap-4 mb-8 break-words',
               message.sender === 'user' ? 'justify-end' : 'justify-start'
             )}
           >
-            <div
-              className={cn(
-                'flex max-w-[80%] gap-3',
-                message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
-              )}
-            >
-              <Avatar className="h-8 w-8 mt-1">
-                <AvatarFallback>
-                  {message.sender === 'user' ? 'U' : 'AI'}
-                </AvatarFallback>
-              </Avatar>
-              
-              <div className="space-y-2">
-                <Card className={cn(
-                  message.sender === 'user' 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'bg-muted'
-                )}>
-                  <CardContent className="p-3">
-                    <p className="text-sm">{message.content}</p>
-                  </CardContent>
-                </Card>
-
-                {message.sender === 'ai' && (message.images || message.sources) && (
-                  <div className="w-full max-w-md">
-                    <Tabs defaultValue="answer" className="w-full">
-                      <TabsList className="grid w-full grid-cols-4">
-                        <TabsTrigger value="answer">Answer</TabsTrigger>
-                        <TabsTrigger value="images" disabled={!message.images}>Images</TabsTrigger>
-                        <TabsTrigger value="videos" disabled>Videos</TabsTrigger>
-                        <TabsTrigger value="sources" disabled={!message.sources}>Sources</TabsTrigger>
-                      </TabsList>
-                      
-                      <TabsContent value="answer" className="mt-2">
-                        <Card>
-                          <CardContent className="p-3">
-                            <p className="text-sm text-muted-foreground">
-                              Main response content appears here.
-                            </p>
-                          </CardContent>
-                        </Card>
-                      </TabsContent>
-                      
-                      {message.images && (
-                        <TabsContent value="images" className="mt-2">
-                          <div className="grid grid-cols-2 gap-2">
-                            {message.images.map((image, index) => (
-                              <img
-                                key={index}
-                                src={image}
-                                alt={`Generated image ${index + 1}`}
-                                className="w-full h-24 object-cover rounded-lg"
-                              />
-                            ))}
-                          </div>
-                        </TabsContent>
-                      )}
-                      
-                      {message.sources && (
-                        <TabsContent value="sources" className="mt-2">
-                          <Card>
-                            <CardContent className="p-3 space-y-2">
-                              {message.sources.map((source, index) => (
-                                <div key={index} className="text-sm">
-                                  <a 
-                                    href={source.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:underline"
-                                  >
-                                    {source.title}
-                                  </a>
-                                </div>
-                              ))}
-                            </CardContent>
-                          </Card>
-                        </TabsContent>
-                      )}
-                    </Tabs>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
-        
-        {isTyping && (
-          <div className="flex justify-start">
-            <div className="flex gap-3 max-w-[80%]">
-              <Avatar className="h-8 w-8 mt-1">
+            {message.sender === 'ai' && (
+              <Avatar className="h-10 w-10">
                 <AvatarFallback>AI</AvatarFallback>
               </Avatar>
-              <Card className="bg-muted">
-                <CardContent className="p-3">
-                  <TypingIndicator />
-                </CardContent>
-              </Card>
+            )}
+
+            <div
+              className={cn(
+                'w-full',
+                message.sender === 'user'
+                  ? 'bg-primary text-primary-foreground rounded-lg p-1 max-w-md'
+                  : ''
+              )}
+            >
+          {message.sender === 'ai' ? (
+            <div className="bg-muted rounded-lg px-6 py-4 w-full break-words font-['Roboto',sans-serif] leading-normal">
+          <ReactMarkdown
+            components={{
+              h1: ({ node, ...props }) => (
+                <h1 className="text-3xl font-bold mt-6 mb-3 leading-tight" {...props} />
+              ),
+              h2: ({ node, ...props }) => (
+                <h2 className="text-2xl font-bold mt-5 mb-2 leading-snug" {...props} />
+              ),
+              h3: ({ node, ...props }) => (
+                <h3 className="text-xl font-semibold mt-4 mb-2 leading-snug" {...props} />
+              ),
+              p: ({ node, ...props }) => (
+                <p className="mb-3 leading-normal" {...props} />
+              ),
+              ul: ({ node, ...props }) => (
+                <ul className="list-disc ml-6 mb-3 leading-normal" {...props} />
+              ),
+              ol: ({ node, ...props }) => (
+                <ol className="list-decimal ml-6 mb-3 leading-normal" {...props} />
+              ),
+              li: ({ node, ...props }) => (
+                <li className="mb-1 leading-normal" {...props} />
+              ),
+              strong: ({ node, ...props }) => (
+                <strong className="font-bold" {...props} />
+              ),
+            }}
+          >
+            {formatMarkdown(message.content)}
+          </ReactMarkdown>
+            </div>
+          ) : (
+            <p className="text-sm bg-primary text-primary-foreground rounded-lg px-4 py-2 max-w-md break-words">
+              {message.content}
+            </p>
+          )}
+        </div>
+            {message.sender === 'user' && (
+              <Avatar className="h-10 w-10">
+                <AvatarFallback>U</AvatarFallback>
+              </Avatar>
+            )}
+          </div>
+        ))}
+
+        {isTyping && (
+          <div className="flex gap-4 mb-8">
+            <Avatar className="h-10 w-10">
+              <AvatarFallback>AI</AvatarFallback>
+            </Avatar>
+            <div className="bg-muted rounded-lg px-4 py-2">
+              <TypingIndicator />
             </div>
           </div>
         )}
-        
+
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
-      <div className="border-t p-4">
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
+      <div className="sticky right-0 bottom-0 bg-background border-t p-4">
+        <div className="flex gap-2 mx-auto w-full">
+          {/* <Button variant="outline" size="sm">
             <Paperclip className="h-4 w-4" />
-          </Button>
+          </Button> */}
           <Input
             placeholder="Type your message..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            className="flex-1"
+            className="flex-1 rounded-lg"
           />
           <Button onClick={handleSendMessage} disabled={!input.trim()}>
             <Send className="h-4 w-4" />

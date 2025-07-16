@@ -62,7 +62,7 @@ export function AuthPage() {
             <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
               <MessageCircle className="h-6 w-6 text-primary-foreground" />
             </div>
-            <span className="text-2xl font-bold">ChatAI</span>
+            <span className="text-2xl font-bold">MyChatAI</span>
           </div>
           <p className="text-muted-foreground">
             Sign in to continue your AI conversations

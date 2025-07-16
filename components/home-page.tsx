@@ -47,7 +47,7 @@ export function HomePage() {
       <section className="text-center space-y-6 py-12">
         <div className="space-y-4">
           <h1 className="text-4xl font-bold gradient-text">
-            Welcome to ChatAI
+            Welcome to MyChatAI
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Your intelligent AI companion for creative conversations, problem-solving, and endless possibilities.

@@ -1,6 +1,6 @@
-# 🚀 **ChatAI — Your AI-Powered Chat Companion**
+# 🚀 **MyChatAI — Your AI-Powered Chat Companion**
 
-Welcome to **ChatAI**, an intelligent and modern chat application that lets you interact naturally with AI, manage your conversations, and personalize your experience through themes and profile customization.
+Welcome to **MyChatAI**, an intelligent and modern chat application that lets you interact naturally with AI, manage your conversations, and personalize your experience through themes and profile customization.
 ### Live Demo: https://my-chat-ai-canada.vercel.app/
 
 ---
@@ -65,13 +65,6 @@ Welcome to **ChatAI**, an intelligent and modern chat application that lets you 
 
 ---
 
-### Installation
-
-```bash
-git clone https://github.com/yourusername/chatai.git
-cd chatai
-npm install
-```
 ### Configuration
 
 - Add .env file includes:

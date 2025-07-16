@@ -29,7 +29,7 @@ export function Header() {
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-sm">AI</span>
           </div>
-          <span className="font-semibold text-lg">ChatAI</span>
+          <span className="font-semibold text-lg">MyChatAI</span>
         </div>
         
         <div className="flex items-center gap-2">

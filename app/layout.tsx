@@ -5,8 +5,8 @@ import { AuthProvider } from '@/components/auth-provider';
 
 // ✅ Add this metadata export
 export const metadata = {
-  title: 'ChatAI',
-  description: 'ChatAI - Your AI-powered chat assistant',
+  title: 'MyChatAI',
+  description: 'MyChatAI - Your AI-powered chat assistant',
   icons: {
     icon: '/favicon.png', // make sure this file exists in your public folder
   },

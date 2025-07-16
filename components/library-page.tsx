@@ -115,12 +115,6 @@ export default function ChatPage() {
     fetchChats();
   };
 
-//   const filteredChats = chats.filter(result =>
-//   (result.title ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-//   (result.last_message ?? '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-//   (result.tags ?? []).some(tag => (tag ?? '').toLowerCase().includes(searchQuery.toLowerCase()))
-// );
-
 const filteredChats = chats.filter(chat => {
   const query = searchQuery.toLowerCase();
 

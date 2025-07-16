@@ -20,21 +20,23 @@ type Message = {
   timestamp: Date;
 };
 
-export function ChatInterface() {
+type ChatInterfaceProps = {
+  chatId?: string | null;
+};
+
+export function ChatInterface({ chatId: externalChatId }: ChatInterfaceProps) {
   const searchParams = useSearchParams();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [chatId, setChatId] = useState<string | null>(() => {
-  const initialId = searchParams.get("id");
-  return initialId;
-});
   const [isPinned, setIsPinned] = useState(false);
   const initialQuestion = searchParams.get("question");
-
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
 
+  const [chatId, setChatId] = useState<string | null>(() => {
+      return externalChatId ?? searchParams.get("id");
+  });
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };

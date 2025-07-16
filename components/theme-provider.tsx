@@ -31,30 +31,34 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     return 'light';
   });
 
-  useEffect(() => {
-    const savedTheme = (user?.theme || localStorage.getItem('theme')) as Theme;
-    if (savedTheme) {
-      setThemeState(savedTheme);
-    }
-  }, [user]);
+useEffect(() => {
+  const savedTheme = localStorage.getItem('theme') as Theme;
+  if (savedTheme) {
+    setThemeState(savedTheme);
+  } else {
+    setThemeState('light'); // Default fallback
+  }
+}, []);
 
-  useEffect(() => {
-    localStorage.setItem('theme', theme);
-    document.documentElement.className = theme;
-    if (user && user.theme !== theme) {
-      supabase
-        .from('Users')
-        .update({ theme })
-        .eq('id', user.id)
-        .then(({ error }) => {
-          if (error) {
-            console.error('Failed to save theme', error);
-          } else {
-            setUser(prev => (prev ? { ...prev, theme } : prev));
-          }
-        });
-    }
-  }, [theme, user, setUser]);
+useEffect(() => {
+  localStorage.setItem('theme', theme);
+  document.documentElement.className = theme;
+
+  if (user && user.theme !== theme) {
+    supabase
+      .from('Users')
+      .update({ theme })
+      .eq('id', user.id)
+      .then(({ error }) => {
+        if (error) {
+          console.error('Failed to save theme', error);
+        } else {
+          setUser(prev => (prev ? { ...prev, theme } : prev));
+        }
+      });
+  }
+}, [theme, user, setUser]);
+
 
   const value = {
     theme,

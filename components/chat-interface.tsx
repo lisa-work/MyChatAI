@@ -34,7 +34,12 @@ export function ChatInterface({ chatId: externalChatId }: ChatInterfaceProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
 
-  const [chatId, setChatId] = useState<string | null>(() => {
+  interface ChatIdState {
+    chatId: string | null;
+    setChatId: React.Dispatch<React.SetStateAction<string | null>>;
+  }
+
+  const [chatId, setChatId]: [string | null, React.Dispatch<React.SetStateAction<string | null>>] = useState<string | null>(() => {
       return externalChatId ?? searchParams.get("id");
   });
   const scrollToBottom = () => {
@@ -177,68 +182,6 @@ const createChatSession = async (newMessages: Message[]) => {
     }
   };
 
-  // const handleSendMessage = async () => {
-  //   if (!input.trim()) return;
-
-  //   const userMessage: Message = {
-  //     id: Date.now().toString(),
-  //     content: input,
-  //     sender: 'user',
-  //     timestamp: new Date(),
-  //   };
-
-  //   const newMessages = [...messages, userMessage];
-  //   setMessages(newMessages);
-  //   setInput('');
-  //   setIsTyping(true);
-
-  //   try {
-  //     const formattedMessages = newMessages.map(m => ({
-  //       role: m.sender === 'user' ? 'user' : 'assistant',
-  //       content: m.content,
-  //     }));
-
-  //     const res = await fetch('/api/api-chat', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ messages: formattedMessages, recordId: null }),
-  //     });
-
-  //     const data = await res.json();
-  //     if (!res.ok) {
-  //       throw new Error(data?.error || 'Error getting response from server.');
-  //     }
-
-  //     const aiMessage: Message = {
-  //       id: (Date.now() + 1).toString(),
-  //       content: data.reply ?? '',
-  //       sender: 'ai',
-  //       timestamp: new Date(),
-  //     };
-
-  //     const updatedMessages = [...newMessages, aiMessage];
-  //     setMessages(updatedMessages);
-
-  //     if (!chatId) {
-  //       await createChatSession(updatedMessages);
-  //     } else {
-  //       await updateChatSession(updatedMessages);
-  //     }
-  //   } catch (error) {
-  //     console.error('Failed to get AI response', error);
-  //     const msg = error instanceof Error ? error.message : 'Error getting response from server.';
-  //     const errorMessage: Message = {
-  //       id: (Date.now() + 1).toString(),
-  //       content: msg,
-  //       sender: 'ai',
-  //       timestamp: new Date(),
-  //     };
-  //     setMessages(prev => [...prev, errorMessage]);
-  //   } finally {
-  //     setIsTyping(false);
-  //   }
-  // };
-
   const handleSendMessage = async (customInput?: string) => {
   const messageContent = typeof (customInput ?? input) === "string" ? (customInput ?? input) : "";
   if (!messageContent.trim()) return;
@@ -310,10 +253,6 @@ const createChatSession = async (newMessages: Message[]) => {
       handleSendMessage();
     }
   };
-
-  // const formatMarkdown = (text: string) => {
-  //   return text.replace(/([^\n])\n([^\n])/g, '$1\n\n$2');
-  // };
 
   return (
     <div className="flex flex-col h-full bg-background">

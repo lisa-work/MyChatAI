@@ -74,6 +74,7 @@ npm install
 ### Configuration
 
 - Add .env file includes:
+- 
 NEXT_PUBLIC_SUPABASE_URL
 
 NEXT_PUBLIC_SUPABASE_ANON_KEY

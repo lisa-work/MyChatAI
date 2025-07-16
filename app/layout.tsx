@@ -1,9 +1,16 @@
-'use client';
-
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { AuthProvider } from '@/components/auth-provider';
+
+// ✅ Add this metadata export
+export const metadata = {
+  title: 'ChatAI',
+  description: 'ChatAI - Your AI-powered chat assistant',
+  icons: {
+    icon: '/favicon.png', // make sure this file exists in your public folder
+  },
+};
 
 export default function RootLayout({
   children,

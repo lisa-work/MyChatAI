@@ -10,8 +10,8 @@ type User = {
   name: string;
   avatar?: string;
   password: string;
-  theme?: string; // Optional theme preference
-};
+  theme?: string;
+}; // Define User type with optional theme property
 
 type AuthProviderProps = {
   children: React.ReactNode;

@@ -60,15 +60,6 @@ export function Sidebar() {
       </nav>
 
       <div className="p-3 border-t">
-        {/* <div className="mb-2">
-          <Input
-            placeholder="Search chats..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="h-8 rounded-lg"
-          />
-        </div> */}
-        
         <Button 
           variant="ghost" 
           className="w-full justify-start text-destructive hover:text-destructive"

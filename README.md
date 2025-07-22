@@ -41,7 +41,7 @@ Welcome to **MyChatAI**, an intelligent and modern chat application that lets yo
 - **Styling**: Tailwind CSS
 - **Authentication**: Custom logic (Supabase + bcryptjs)
 - **Database**: Supabase (PostgreSQL)
-- **AI Responses**: Integrated API endpoint (gemini-1.5-flash)
+- **AI Responses**: Integrated API endpoint (gemini-2.0-flash)
 - **State Management**: React hooks & Context (AuthProvider and ThemeProvider)
 
 ---

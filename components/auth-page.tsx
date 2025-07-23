@@ -9,7 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/hooks/use-auth';
 import { MessageCircle, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
-import bcrypt from 'bcryptjs';
 
 export function AuthPage() {
   const { login, signup } = useAuth();
@@ -170,7 +169,7 @@ export function AuthPage() {
                     </div>
                   </div>
                   <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? 'Creating Account...' : 'Create Account'}
+                    {isLoading ? 'Creating Account...' : 'Account Created'}
                   </Button>
                 </form>
               </TabsContent>
